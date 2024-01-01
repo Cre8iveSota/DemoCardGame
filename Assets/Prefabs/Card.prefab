@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7094479249210626111}
   - component: {fileID: 1236100605244368491}
+  - component: {fileID: 4146231070195731503}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -125,6 +126,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647467945755321930}
   m_CullTransparentMesh: 1
+--- !u!114 &4146231070195731503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647467945755321930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5322195a3dd0346519b56b24741ea5b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5599617600250798763
 GameObject:
   m_ObjectHideFlags: 0
