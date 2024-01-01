@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private GameObject panel;
-    [SerializeField] private Entry entry;
-    void Start()
+    [SerializeField] Transform playerHandTransform;
+    [SerializeField] GameObject CardPrefab;
+    private void Start()
     {
-        panel.SetActive(true);
-        Debug.Log("EntryAt " + entry.at);
-        Debug.Log("EntryHP  " + entry.hp);
+        CreateCard(playerHandTransform);
     }
 
+    private void CreateCard(Transform hand)
+    {
+        Instantiate(CardPrefab, hand, false);
+    }
 }
