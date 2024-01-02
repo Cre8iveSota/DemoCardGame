@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] Transform playerHandTransform, enemyHandTransform;
+    [SerializeField] Transform playerHandTransform, enemyHandTransform, playerFieldTransform, enemyFieldTransform;
     [SerializeField] CardController CardPrefab;
     bool isPlayerTurn;
     private void Start()
@@ -66,7 +66,35 @@ public class GameManager : MonoBehaviour
     }
     private void EnemyTurn()
     {
+        // To get the hand list
+        CardController[] cardList = enemyHandTransform.GetComponentsInChildren<CardController>();
+        // choose the card to play
+        CardController enemyCard = cardList[0];
+        // To move card
+        enemyCard.cardMovement.SetCardTransform(enemyFieldTransform);
+        // To get field card list
+        CardController[] enemyFeildCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
+        // To choose attacker
+        CardController attacker = enemyFeildCardList[0];
+        // To choose Defender
+        CardController[] playerFieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
+        CardController defender = playerFieldCardList[0];
+        // Make attacker and defender battle
+        CardsButtle(attacker, defender);
         Debug.Log("Start Enemy");
+    }
+
+    void CardsButtle(CardController attacker, CardController defender)
+    {
+        Debug.Log("attacker hp" + attacker.model.hp);
+        Debug.Log("defender hp" + defender.model.hp);
+
+        attacker.model.Attack(defender);
+        defender.model.Attack(attacker);
+        Debug.Log("attacker hp" + attacker.model.hp);
+        Debug.Log("defender hp" + defender.model.hp);
+        attacker.CheckAlive();
+        defender.CheckAlive();
     }
 
 }

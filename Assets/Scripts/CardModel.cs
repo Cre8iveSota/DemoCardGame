@@ -9,6 +9,7 @@ public class CardModel
     public int at;
     public int cost;
     public Sprite icon;
+    public bool isAlive;
     public CardModel(int cardId)
     {
         CardEntity cardEntity = Resources.Load<CardEntity>("CardDataList/Card" + cardId);
@@ -17,6 +18,20 @@ public class CardModel
         at = cardEntity.at;
         cost = cardEntity.cost;
         icon = cardEntity.icon;
+        isAlive = true;
+    }
+    void Damage(int damage)
+    {
+        hp -= damage;
+        if (hp <= 0)
+        {
+            hp = 0;
+            isAlive = false;
+        }
+    }
 
+    public void Attack(CardController cardController)
+    {
+        cardController.model.Damage(at);
     }
 }

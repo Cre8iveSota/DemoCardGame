@@ -22,4 +22,8 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         transform.SetParent(defaultParent, false); // Drop時に元の親に変更する
         GetComponent<CanvasGroup>().blocksRaycasts = true; //移動後にBlockRaycastをtrueにすることで、再度カードをマウスで指定できるようにする。これがないと、二度とカードを指定できなくなる。
     }
+    public void SetCardTransform(Transform parentTransform)
+    {
+        transform.SetParent(parentTransform);
+    }
 }
