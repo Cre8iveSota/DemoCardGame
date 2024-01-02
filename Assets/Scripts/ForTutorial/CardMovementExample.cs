@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CardMovement : MonoBehaviour, IDragHandler
+public class CardMovementExample : MonoBehaviour, IDragHandler
 {
     public void OnDrag(PointerEventData eventData)
     {

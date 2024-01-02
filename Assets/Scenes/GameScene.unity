@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 46930611}
   - component: {fileID: 46930610}
   - component: {fileID: 46930612}
+  - component: {fileID: 46930613}
   m_Layer: 5
   m_Name: Player Feild
   m_TagString: Untagged
@@ -225,6 +226,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &46930613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46930608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57fe498a9e4414a8e92b51f84fa5e30f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &58162039
 GameObject:
   m_ObjectHideFlags: 0
@@ -744,6 +757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerHandTransform: {fileID: 1961464011}
+  enemyHandTransform: {fileID: 1459876113}
   CardPrefab: {fileID: 4146231070195731503, guid: 2457c9c09aea643e39a7e5ee8c883f02, type: 3}
 --- !u!4 &742534827
 Transform:
@@ -842,7 +856,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 799553824}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 742534826}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ChangeTurn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &799553824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1987,6 +2013,7 @@ GameObject:
   - component: {fileID: 1961464013}
   - component: {fileID: 1961464012}
   - component: {fileID: 1961464014}
+  - component: {fileID: 1961464015}
   m_Layer: 5
   m_Name: Player Hand
   m_TagString: Untagged
@@ -2077,6 +2104,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1961464015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961464010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57fe498a9e4414a8e92b51f84fa5e30f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
