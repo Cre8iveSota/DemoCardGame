@@ -1,12 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] Transform playerHandTransform, enemyHandTransform, playerFieldTransform, enemyFieldTransform;
     [SerializeField] CardController CardPrefab;
+    [SerializeField] TMP_Text playerHeroHpText, enemyHeroHpText;
+
+    List<int> playerDeck = new List<int>() { 1, 1, 2, 2, 3 },
+              enemyDeck = new List<int>() { 1, 2, 2, 3, 1 };
+    int playerHeroHp, enemyHeroHp;
 
     bool isPlayerTurn;
 
@@ -24,6 +30,9 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+        playerHeroHp = 30;
+        enemyHeroHp = 30;
+        ShowHeroHp();
         isPlayerTurn = true;
         // Distribute 3 cards for player hand
         SettingInitHand();
@@ -34,15 +43,25 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < 3; i++)
         {
-            CreateCard(playerHandTransform);
-            CreateCard(enemyHandTransform);
+            GiveCardtoHand(playerDeck, playerHandTransform);
+            GiveCardtoHand(enemyDeck, enemyHandTransform);
         }
     }
+    private void GiveCardtoHand(List<int> deck, Transform hand)
+    {
+        if (deck.Count == 0)
+        {
+            return;
+        }
+        int cardId = deck[0];
+        deck.RemoveAt(0);
+        CreateCard(cardId, hand);
+    }
 
-    private void CreateCard(Transform hand)
+    private void CreateCard(int cardId, Transform hand)
     {
         CardController card = Instantiate(CardPrefab, hand, false);
-        card.Init(1);
+        card.Init(cardId);
         // card.Init(2);
     }
     void TurnCulc()
@@ -50,12 +69,6 @@ public class GameManager : MonoBehaviour
         if (isPlayerTurn)
         {
             PlayerTurn();
-            CardController[] cardList = playerFieldTransform.GetComponentsInChildren<CardController>();
-            foreach (CardController item in cardList)
-            {
-                // change the state to enable attack
-                item.SetAttackEnable(true);
-            }
         }
         else
         {
@@ -67,20 +80,31 @@ public class GameManager : MonoBehaviour
     public void ChangeTurn()
     {
         isPlayerTurn = !isPlayerTurn;
-        if (isPlayerTurn) CreateCard(playerHandTransform);
+        if (isPlayerTurn) GiveCardtoHand(playerDeck, playerHandTransform);
         else
         {
-            CreateCard(enemyHandTransform);
+            GiveCardtoHand(enemyDeck, enemyHandTransform);
         }
         TurnCulc();
     }
 
     private void PlayerTurn()
     {
-        Debug.Log("Start Player");
+        CardController[] cardList = playerFieldTransform.GetComponentsInChildren<CardController>();
+        foreach (CardController item in cardList)
+        {
+            // change the state to enable attack
+            item.SetAttackEnable(true);
+        }
     }
     private void EnemyTurn()
     {
+        CardController[] cardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
+        foreach (CardController item in cardList)
+        {
+            // change the state to enable attack
+            item.SetAttackEnable(true);
+        }
         // To get the hand list
         CardController[] cardList = enemyHandTransform.GetComponentsInChildren<CardController>();
         // choose the card to play
@@ -93,14 +117,21 @@ public class GameManager : MonoBehaviour
         CardController[] enemyCanAttackCardList = Array.FindAll(enemyFeildCardList, item => item.model.canAttack);
         // Get defender card
         CardController[] playerFieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
-        if (enemyCanAttackCardList.Length > 0 && playerFieldCardList.Length > 0)
+        if (enemyCanAttackCardList.Length > 0)
         {
             // To choose attacker
             CardController attacker = enemyCanAttackCardList[0];
-            // To choose Defender
-            CardController defender = playerFieldCardList[0];
-            // Make attacker and defender battle
-            CardsButtle(attacker, defender);
+            if (playerFieldCardList.Length > 0)
+            {
+                // To choose Defender
+                CardController defender = playerFieldCardList[0];
+                // Make attacker and defender battle
+                CardsButtle(attacker, defender);
+            }
+            else
+            {
+                AttackToHero(attacker, false);
+            }
         }
         Debug.Log("Start Enemy");
     }
@@ -117,5 +148,20 @@ public class GameManager : MonoBehaviour
         attacker.CheckAlive();
         defender.CheckAlive();
     }
+    void ShowHeroHp()
+    {
+        playerHeroHpText.text = playerHeroHp.ToString();
+        enemyHeroHpText.text = enemyHeroHp.ToString();
+    }
 
+    public void AttackToHero(CardController attackerCard, bool isPlayerCard)
+    {
+        if (isPlayerCard) { enemyHeroHp -= attackerCard.model.at; }
+        else
+        {
+            playerHeroHp -= attackerCard.model.at;
+        }
+        attackerCard.SetAttackEnable(false);
+        ShowHeroHp();
+    }
 }

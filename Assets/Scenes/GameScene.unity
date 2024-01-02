@@ -341,6 +341,7 @@ GameObject:
   - component: {fileID: 272686625}
   - component: {fileID: 272686627}
   - component: {fileID: 272686626}
+  - component: {fileID: 272686628}
   m_Layer: 5
   m_Name: Enemy Hero
   m_TagString: Untagged
@@ -407,6 +408,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 272686624}
   m_CullTransparentMesh: 1
+--- !u!114 &272686628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272686624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 331ec71fbc872419f8f7f99c86f9b44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &310957638
 GameObject:
   m_ObjectHideFlags: 0
@@ -761,6 +774,8 @@ MonoBehaviour:
   playerFieldTransform: {fileID: 46930609}
   enemyFieldTransform: {fileID: 1911573298}
   CardPrefab: {fileID: 4146231070195731503, guid: 2457c9c09aea643e39a7e5ee8c883f02, type: 3}
+  playerHeroHpText: {fileID: 802704290}
+  enemyHeroHpText: {fileID: 310957640}
 --- !u!4 &742534827
 Transform:
   m_ObjectHideFlags: 0
@@ -1054,6 +1069,7 @@ GameObject:
   - component: {fileID: 826159319}
   - component: {fileID: 826159321}
   - component: {fileID: 826159320}
+  - component: {fileID: 826159322}
   m_Layer: 5
   m_Name: Player Hero
   m_TagString: Untagged
@@ -1120,6 +1136,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 826159318}
   m_CullTransparentMesh: 1
+--- !u!114 &826159322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 826159318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 331ec71fbc872419f8f7f99c86f9b44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1058759228
 GameObject:
   m_ObjectHideFlags: 0
