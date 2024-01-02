@@ -7,7 +7,16 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] Transform playerHandTransform, enemyHandTransform, playerFieldTransform, enemyFieldTransform;
     [SerializeField] CardController CardPrefab;
+
     bool isPlayerTurn;
+
+    // シングルトン化
+    public static GameManager instance;
+
+    void Awake()
+    {
+        if (instance == null) instance = this;
+    }
     private void Start()
     {
         StartGame();
@@ -84,7 +93,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Start Enemy");
     }
 
-    void CardsButtle(CardController attacker, CardController defender)
+    public void CardsButtle(CardController attacker, CardController defender)
     {
         Debug.Log("attacker hp" + attacker.model.hp);
         Debug.Log("defender hp" + defender.model.hp);
