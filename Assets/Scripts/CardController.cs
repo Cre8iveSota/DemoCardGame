@@ -18,6 +18,12 @@ public class CardController : MonoBehaviour
         cardView.Show(model);
     }
 
+    public void Attack(CardController enemyCard)
+    {
+        model.Attack(enemyCard);
+        SetAttackEnable(false);
+    }
+
 
     public void CheckAlive()
     {
@@ -29,5 +35,11 @@ public class CardController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void SetAttackEnable(bool enable)
+    {
+        cardView.SetSelectablePanel(enable);
+        model.canAttack = enable;
     }
 }

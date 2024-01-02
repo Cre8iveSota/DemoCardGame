@@ -50,6 +50,12 @@ public class GameManager : MonoBehaviour
         if (isPlayerTurn)
         {
             PlayerTurn();
+            CardController[] cardList = playerFieldTransform.GetComponentsInChildren<CardController>();
+            foreach (CardController item in cardList)
+            {
+                // change the state to enable attack
+                item.SetAttackEnable(true);
+            }
         }
         else
         {
@@ -83,13 +89,19 @@ public class GameManager : MonoBehaviour
         enemyCard.cardMovement.SetCardTransform(enemyFieldTransform);
         // To get field card list
         CardController[] enemyFeildCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
-        // To choose attacker
-        CardController attacker = enemyFeildCardList[0];
-        // To choose Defender
+        // Get can attack card
+        CardController[] enemyCanAttackCardList = Array.FindAll(enemyFeildCardList, item => item.model.canAttack);
+        // Get defender card
         CardController[] playerFieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
-        CardController defender = playerFieldCardList[0];
-        // Make attacker and defender battle
-        CardsButtle(attacker, defender);
+        if (enemyCanAttackCardList.Length > 0 && playerFieldCardList.Length > 0)
+        {
+            // To choose attacker
+            CardController attacker = enemyCanAttackCardList[0];
+            // To choose Defender
+            CardController defender = playerFieldCardList[0];
+            // Make attacker and defender battle
+            CardsButtle(attacker, defender);
+        }
         Debug.Log("Start Enemy");
     }
 
@@ -98,8 +110,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("attacker hp" + attacker.model.hp);
         Debug.Log("defender hp" + defender.model.hp);
 
-        attacker.model.Attack(defender);
-        defender.model.Attack(attacker);
+        attacker.Attack(defender);
+        defender.Attack(attacker);
         Debug.Log("attacker hp" + attacker.model.hp);
         Debug.Log("defender hp" + defender.model.hp);
         attacker.CheckAlive();
