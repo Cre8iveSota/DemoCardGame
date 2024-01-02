@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Transform playerHandTransform, enemyHandTransform, playerFieldTransform, enemyFieldTransform;
     [SerializeField] CardController CardPrefab;
     [SerializeField] TMP_Text playerHeroHpText, enemyHeroHpText;
+    [SerializeField] GameObject resultPanel;
+    [SerializeField] TMP_Text resultText;
 
     List<int> playerDeck = new List<int>() { 1, 1, 2, 2, 3 },
               enemyDeck = new List<int>() { 1, 2, 2, 3, 1 };
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+        resultPanel.SetActive(false);
         playerHeroHp = 30;
         enemyHeroHp = 30;
         ShowHeroHp();
@@ -163,5 +166,52 @@ public class GameManager : MonoBehaviour
         }
         attackerCard.SetAttackEnable(false);
         ShowHeroHp();
+        CheckHeroHP();
+    }
+    void CheckHeroHP()
+    {
+        if (playerHeroHp <= 0 || enemyHeroHp <= 0)
+        {
+            resultPanel.SetActive(true);
+            if (playerHeroHp <= 0)
+            {
+                resultText.text = "Lose";
+            }
+            else
+            {
+                resultText.text = "Win";
+            }
+        }
+    }
+
+    public void Restart()
+    {
+        // Delete hand  and field
+        ClearFieldandHand();
+
+        // deck generate
+        playerDeck = new List<int>() { 1, 1, 2, 2, 3 };
+        enemyDeck = new List<int>() { 1, 2, 2, 3, 1 };
+        StartGame();
+    }
+
+    private void ClearFieldandHand()
+    {
+        foreach (Transform card in playerHandTransform)
+        {
+            Destroy(card.gameObject);
+        }
+        foreach (Transform card in playerFieldTransform)
+        {
+            Destroy(card.gameObject);
+        }
+        foreach (Transform card in enemyHandTransform)
+        {
+            Destroy(card.gameObject);
+        }
+        foreach (Transform card in enemyFieldTransform)
+        {
+            Destroy(card.gameObject);
+        }
     }
 }
