@@ -238,6 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57fe498a9e4414a8e92b51f84fa5e30f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 1
 --- !u!1 &58162039
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,8 +989,14 @@ MonoBehaviour:
   CardPrefab: {fileID: 4146231070195731503, guid: 2457c9c09aea643e39a7e5ee8c883f02, type: 3}
   playerHeroHpText: {fileID: 802704290}
   enemyHeroHpText: {fileID: 310957640}
+  playerManaCostText: {fileID: 1877552556}
+  enemyManaCostText: {fileID: 1135865956}
   resultPanel: {fileID: 405776442}
   resultText: {fileID: 1148752361}
+  timeCountText: {fileID: 1951646101}
+  playerHero: {fileID: 826159319}
+  playerManaCost: 0
+  enemyManaCost: 0
 --- !u!4 &742534827
 Transform:
   m_ObjectHideFlags: 0
@@ -2629,6 +2636,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57fe498a9e4414a8e92b51f84fa5e30f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

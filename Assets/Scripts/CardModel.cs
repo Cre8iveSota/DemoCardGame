@@ -11,7 +11,9 @@ public class CardModel
     public Sprite icon;
     public bool isAlive;
     public bool canAttack;
-    public CardModel(int cardId)
+    public bool isFieldCard;
+    public bool isPlayerCard;
+    public CardModel(int cardId, bool isPlayer)
     {
         CardEntity cardEntity = Resources.Load<CardEntity>("CardDataList/Card" + cardId);
         name = cardEntity.name;
@@ -20,6 +22,7 @@ public class CardModel
         cost = cardEntity.cost;
         icon = cardEntity.icon;
         isAlive = true;
+        isPlayerCard = isPlayer;
     }
     void Damage(int damage)
     {

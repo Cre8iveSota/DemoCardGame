@@ -9,14 +9,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] Transform playerHandTransform, enemyHandTransform, playerFieldTransform, enemyFieldTransform;
     [SerializeField] CardController CardPrefab;
     [SerializeField] TMP_Text playerHeroHpText, enemyHeroHpText;
+    [SerializeField] TMP_Text playerManaCostText, enemyManaCostText;
     [SerializeField] GameObject resultPanel;
     [SerializeField] TMP_Text resultText;
+    [SerializeField] TMP_Text timeCountText;
+    [SerializeField] Transform playerHero;
 
     List<int> playerDeck = new List<int>() { 1, 1, 2, 2, 3 },
               enemyDeck = new List<int>() { 1, 2, 2, 3, 1 };
     int playerHeroHp, enemyHeroHp;
+    public int playerManaCost, enemyManaCost;
+
 
     bool isPlayerTurn;
+    int playerDefaultManaCost, enemyDefaultManaCost;
+    int timeCount;
 
     // シングルトン化
     public static GameManager instance;
@@ -32,10 +39,13 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+        playerDefaultManaCost = enemyDefaultManaCost = 5;
+        playerManaCost = enemyManaCost = 5;
         resultPanel.SetActive(false);
         playerHeroHp = 30;
         enemyHeroHp = 30;
         ShowHeroHp();
+        ShowManaCost();
         isPlayerTurn = true;
         // Distribute 3 cards for player hand
         SettingInitHand();
@@ -64,78 +74,138 @@ public class GameManager : MonoBehaviour
     private void CreateCard(int cardId, Transform hand)
     {
         CardController card = Instantiate(CardPrefab, hand, false);
-        card.Init(cardId);
+        if (hand.name == "PlayerHand")
+        {
+            card.Init(cardId, true);
+        }
+        else
+        {
+            card.Init(cardId, false);
+        }
         // card.Init(2);
     }
     void TurnCulc()
     {
+        StopAllCoroutines(); // 安全のため、現状のコルーチンを止めておく
+        StartCoroutine(CountDown());
         if (isPlayerTurn)
         {
             PlayerTurn();
         }
         else
         {
-            EnemyTurn();
-            ChangeTurn();
+            StartCoroutine(EnemyTurn());
         }
+    }
+
+    IEnumerator CountDown()
+    {
+        timeCount = 5;
+        timeCountText.text = timeCount.ToString();
+        while (timeCount > 0)
+        {
+            yield return new WaitForSeconds(1f);
+            timeCount--;
+            timeCountText.text = timeCount.ToString();
+        }
+        ChangeTurn();
     }
 
     public void ChangeTurn()
     {
+        CardController[] cardList = playerFieldTransform.GetComponentsInChildren<CardController>();
+        EnableAtackFramColor(cardList, false);
+
+        CardController[] cardEnemyFieldList = enemyFieldTransform.GetComponentsInChildren<CardController>();
+        EnableAtackFramColor(cardEnemyFieldList, false);
+
+
+
         isPlayerTurn = !isPlayerTurn;
-        if (isPlayerTurn) GiveCardtoHand(playerDeck, playerHandTransform);
+        if (isPlayerTurn)
+        {
+            playerDefaultManaCost++;
+            playerManaCost = playerDefaultManaCost;
+            GiveCardtoHand(playerDeck, playerHandTransform);
+        }
         else
         {
+            enemyDefaultManaCost++;
+            enemyManaCost = enemyDefaultManaCost;
             GiveCardtoHand(enemyDeck, enemyHandTransform);
         }
+        ShowManaCost();
         TurnCulc();
     }
 
     private void PlayerTurn()
     {
         CardController[] cardList = playerFieldTransform.GetComponentsInChildren<CardController>();
-        foreach (CardController item in cardList)
-        {
-            // change the state to enable attack
-            item.SetAttackEnable(true);
-        }
+        EnableAtackFramColor(cardList, true);
     }
-    private void EnemyTurn()
+    private IEnumerator EnemyTurn()
     {
         CardController[] cardEnemyFieldList = enemyFieldTransform.GetComponentsInChildren<CardController>();
-        foreach (CardController item in cardEnemyFieldList)
-        {
-            // change the state to enable attack
-            item.SetAttackEnable(true);
-        }
+        EnableAtackFramColor(cardEnemyFieldList, true);
+        yield return new WaitForSeconds(1);
+
         // To get the hand list
         CardController[] cardList = enemyHandTransform.GetComponentsInChildren<CardController>();
-        // choose the card to play
-        CardController enemyCard = cardList[0];
-        // To move card
-        enemyCard.cardMovement.SetCardTransform(enemyFieldTransform);
+
+        // if enemy has under cost card, they keep to play card until it goes to be nothing hand
+        while (Array.Exists(cardList, card => card.model.cost < enemyManaCost))
+        {
+            // Get under cost card
+            CardController[] selectableHandCardList = Array.FindAll(cardList, card => card.model.cost < enemyManaCost);
+
+            // choose the card to play
+            CardController enemyCard = selectableHandCardList[0];
+            // To move card
+            instance.ReduceManaCost(enemyCard.model.cost, false);
+            enemyCard.model.isFieldCard = true;
+            StartCoroutine(enemyCard.cardMovement.MoveToFeild(enemyFieldTransform));
+            cardList = enemyHandTransform.GetComponentsInChildren<CardController>();
+            yield return new WaitForSeconds(1);
+        }
+
+
+        yield return new WaitForSeconds(1);
+
         // To get field card list
         CardController[] enemyFeildCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
-        // Get can attack card
-        CardController[] enemyCanAttackCardList = Array.FindAll(enemyFeildCardList, item => item.model.canAttack);
-        // Get defender card
-        CardController[] playerFieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
-        if (enemyCanAttackCardList.Length > 0)
+        // They attack successively until there are no more cards available for attack.
+        while (Array.Exists(enemyFeildCardList, card => card.model.canAttack))
         {
+            // Get can attack card
+            CardController[] enemyCanAttackCardList = Array.FindAll(enemyFeildCardList, item => item.model.canAttack);
+            // Get defender card
+            CardController[] playerFieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
+
             // To choose attacker
             CardController attacker = enemyCanAttackCardList[0];
             if (playerFieldCardList.Length > 0)
             {
                 // To choose Defender
                 CardController defender = playerFieldCardList[0];
+
+                StartCoroutine(attacker.cardMovement.MoveToTarget(defender.transform));
+                yield return new WaitForSeconds(0.25f);
                 // Make attacker and defender battle
                 CardsButtle(attacker, defender);
             }
             else
             {
+                StartCoroutine(attacker.cardMovement.MoveToTarget(playerHero));
+                yield return new WaitForSeconds(0.25f);
                 AttackToHero(attacker, false);
+                yield return new WaitForSeconds(0.25f);
+                CheckHeroHP();
             }
+            yield return new WaitForSeconds(1);
+            enemyFeildCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
         }
+        yield return new WaitForSeconds(1);
+        ChangeTurn();
         Debug.Log("Start Enemy");
     }
 
@@ -157,6 +227,23 @@ public class GameManager : MonoBehaviour
         enemyHeroHpText.text = enemyHeroHp.ToString();
     }
 
+    void ShowManaCost()
+    {
+        playerManaCostText.text = playerManaCost.ToString();
+        enemyManaCostText.text = enemyManaCost.ToString();
+    }
+    public void ReduceManaCost(int cost, bool isPlayerCard)
+    {
+        if (isPlayerCard)
+        {
+            playerManaCost -= cost;
+        }
+        else
+        {
+            enemyManaCost -= cost;
+        }
+        ShowManaCost();
+    }
     public void AttackToHero(CardController attackerCard, bool isPlayerCard)
     {
         if (isPlayerCard) { enemyHeroHp -= attackerCard.model.at; }
@@ -166,21 +253,26 @@ public class GameManager : MonoBehaviour
         }
         attackerCard.SetAttackEnable(false);
         ShowHeroHp();
-        CheckHeroHP();
     }
     void CheckHeroHP()
     {
         if (playerHeroHp <= 0 || enemyHeroHp <= 0)
         {
-            resultPanel.SetActive(true);
-            if (playerHeroHp <= 0)
-            {
-                resultText.text = "Lose";
-            }
-            else
-            {
-                resultText.text = "Win";
-            }
+            ShowResultPanel(playerHeroHp);
+        }
+    }
+
+    void ShowResultPanel(int playerHp)
+    {
+        StopAllCoroutines();
+        resultPanel.SetActive(true);
+        if (playerHeroHp <= 0)
+        {
+            resultText.text = "Lose";
+        }
+        else
+        {
+            resultText.text = "Win";
         }
     }
 
@@ -212,6 +304,14 @@ public class GameManager : MonoBehaviour
         foreach (Transform card in enemyFieldTransform)
         {
             Destroy(card.gameObject);
+        }
+    }
+
+    void EnableAtackFramColor(CardController[] fieldCardList, bool enable)
+    {
+        foreach (CardController card in fieldCardList)
+        {
+            card.SetAttackEnable(enable);
         }
     }
 }
