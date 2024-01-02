@@ -99,8 +99,8 @@ public class GameManager : MonoBehaviour
     }
     private void EnemyTurn()
     {
-        CardController[] cardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
-        foreach (CardController item in cardList)
+        CardController[] cardEnemyFieldList = enemyFieldTransform.GetComponentsInChildren<CardController>();
+        foreach (CardController item in cardEnemyFieldList)
         {
             // change the state to enable attack
             item.SetAttackEnable(true);
