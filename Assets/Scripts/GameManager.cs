@@ -6,14 +6,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] Transform playerHandTransform, enemyHandTransform, playerFieldTransform, enemyFieldTransform;
+    [SerializeField] AI enemyAI;
+    [SerializeField] public Transform playerHandTransform, enemyHandTransform, playerFieldTransform, enemyFieldTransform;
     [SerializeField] CardController CardPrefab;
     [SerializeField] TMP_Text playerHeroHpText, enemyHeroHpText;
     [SerializeField] TMP_Text playerManaCostText, enemyManaCostText;
     [SerializeField] GameObject resultPanel;
     [SerializeField] TMP_Text resultText;
     [SerializeField] TMP_Text timeCountText;
-    [SerializeField] Transform playerHero;
+    [SerializeField] public Transform playerHero;
 
     List<int> playerDeck = new List<int>() { 1, 1, 2, 2, 3 },
               enemyDeck = new List<int>() { 1, 2, 2, 3, 1 };
@@ -74,7 +75,7 @@ public class GameManager : MonoBehaviour
     private void CreateCard(int cardId, Transform hand)
     {
         CardController card = Instantiate(CardPrefab, hand, false);
-        if (hand.name == "PlayerHand")
+        if (hand.name == "Player Hand")
         {
             card.Init(cardId, true);
         }
@@ -94,7 +95,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            StartCoroutine(EnemyTurn());
+            StartCoroutine(enemyAI.EnemyTurn());
         }
     }
 
@@ -154,75 +155,6 @@ public class GameManager : MonoBehaviour
     {
         CardController[] cardList = playerFieldTransform.GetComponentsInChildren<CardController>();
         EnableAtackFramColor(cardList, true);
-    }
-    private IEnumerator EnemyTurn()
-    {
-        CardController[] cardEnemyFieldList = enemyFieldTransform.GetComponentsInChildren<CardController>();
-        EnableAtackFramColor(cardEnemyFieldList, true);
-        yield return new WaitForSeconds(1);
-
-        // To get the hand list
-        CardController[] cardList = enemyHandTransform.GetComponentsInChildren<CardController>();
-
-        // if enemy has under cost card, they keep to play card until it goes to be nothing hand
-        while (Array.Exists(cardList, card => card.model.cost < enemyManaCost))
-        {
-            // Get under cost card
-            CardController[] selectableHandCardList = Array.FindAll(cardList, card => card.model.cost < enemyManaCost);
-
-            // choose the card to play
-            CardController enemyCard = selectableHandCardList[0];
-            // To move card
-            enemyCard.OnField(false);
-            StartCoroutine(enemyCard.cardMovement.MoveToFeild(enemyFieldTransform));
-            cardList = enemyHandTransform.GetComponentsInChildren<CardController>();
-            yield return new WaitForSeconds(1);
-        }
-
-
-        yield return new WaitForSeconds(1);
-
-        // To get field card list
-        CardController[] enemyFeildCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
-        // They attack successively until there are no more cards available for attack.
-        while (Array.Exists(enemyFeildCardList, card => card.model.canAttack))
-        {
-            // Get can attack card
-            CardController[] enemyCanAttackCardList = Array.FindAll(enemyFeildCardList, item => item.model.canAttack);
-            // Get defender card
-            CardController[] playerFieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
-
-            // To choose attacker
-            CardController attacker = enemyCanAttackCardList[0];
-            if (playerFieldCardList.Length > 0)
-            {
-                // To choose Defender
-                // Only Shild cards are targeted for attack.
-                if (Array.Exists(playerFieldCardList, card => card.model.ability == ABILITY.SHEILD))
-                {
-                    playerFieldCardList = Array.FindAll(playerFieldCardList, card => card.model.ability == ABILITY.SHEILD);
-                }
-                CardController defender = playerFieldCardList[0];
-
-                StartCoroutine(attacker.cardMovement.MoveToTarget(defender.transform));
-                yield return new WaitForSeconds(0.51f);
-                // Make attacker and defender battle
-                CardsButtle(attacker, defender);
-            }
-            else
-            {
-                StartCoroutine(attacker.cardMovement.MoveToTarget(playerHero));
-                yield return new WaitForSeconds(0.25f);
-                AttackToHero(attacker, false);
-                yield return new WaitForSeconds(0.25f);
-                CheckHeroHP();
-            }
-            yield return new WaitForSeconds(1);
-            enemyFeildCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
-        }
-        yield return new WaitForSeconds(1);
-        ChangeTurn();
-        Debug.Log("Start Enemy");
     }
 
     public void CardsButtle(CardController attacker, CardController defender)
@@ -323,7 +255,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void EnableAtackFramColor(CardController[] fieldCardList, bool enable)
+    public void EnableAtackFramColor(CardController[] fieldCardList, bool enable)
     {
         foreach (CardController card in fieldCardList)
         {
