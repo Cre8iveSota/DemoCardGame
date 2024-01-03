@@ -111,6 +111,11 @@ public class GameManager : MonoBehaviour
         ChangeTurn();
     }
 
+    public CardController[] GetEnemyFieldCards()
+    {
+        return enemyFieldTransform.GetComponentsInChildren<CardController>();
+    }
+
     public void ChangeTurn()
     {
         CardController[] cardList = playerFieldTransform.GetComponentsInChildren<CardController>();

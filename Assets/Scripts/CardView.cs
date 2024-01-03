@@ -12,6 +12,8 @@ public class CardView : MonoBehaviour
     [SerializeField] private TMP_Text costText;
     [SerializeField] private Image iconImage;
     [SerializeField] private GameObject selectablePanel;
+    [SerializeField] private GameObject sheildPanel;
+
 
     public void Show(CardModel cardModel)
     {
@@ -20,6 +22,14 @@ public class CardView : MonoBehaviour
         atText.text = cardModel.at.ToString();
         costText.text = cardModel.cost.ToString();
         iconImage.sprite = cardModel.icon;
+        if (cardModel.ability == ABILITY.SHEILD)
+        {
+            sheildPanel.SetActive(true);
+        }
+        else
+        {
+            sheildPanel.SetActive(false);
+        }
     }
 
     public void Refresh(CardModel cardModel)
