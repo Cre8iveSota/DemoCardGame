@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public int playerManaCost, enemyManaCost;
 
 
-    bool isPlayerTurn;
+    public bool isPlayerTurn;
     int playerDefaultManaCost, enemyDefaultManaCost;
     int timeCount;
 
@@ -116,6 +116,13 @@ public class GameManager : MonoBehaviour
         return enemyFieldTransform.GetComponentsInChildren<CardController>();
     }
 
+    public void OnClickTurnEndButton()
+    {
+        if (isPlayerTurn)
+        {
+            ChangeTurn();
+        }
+    }
     public void ChangeTurn()
     {
         CardController[] cardList = playerFieldTransform.GetComponentsInChildren<CardController>();
@@ -190,6 +197,11 @@ public class GameManager : MonoBehaviour
             if (playerFieldCardList.Length > 0)
             {
                 // To choose Defender
+                // Only Shild cards are targeted for attack.
+                if (Array.Exists(playerFieldCardList, card => card.model.ability == ABILITY.SHEILD))
+                {
+                    playerFieldCardList = Array.FindAll(playerFieldCardList, card => card.model.ability == ABILITY.SHEILD);
+                }
                 CardController defender = playerFieldCardList[0];
 
                 StartCoroutine(attacker.cardMovement.MoveToTarget(defender.transform));

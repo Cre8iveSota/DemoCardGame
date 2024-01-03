@@ -11,11 +11,11 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public void OnBeginDrag(PointerEventData eventData)
     {
         CardController cardController = GetComponent<CardController>();
-        if (!cardController.model.isFieldCard && cardController.model.cost <= GameManager.instance.playerManaCost)
+        if (cardController.model.isPlayerCard && GameManager.instance.isPlayerTurn && !cardController.model.isFieldCard && cardController.model.cost <= GameManager.instance.playerManaCost)
         {
             isDragable = true;
         }
-        else if (cardController.model.isFieldCard && cardController.model.canAttack)
+        else if (cardController.model.isPlayerCard && GameManager.instance.isPlayerTurn && cardController.model.isFieldCard && cardController.model.canAttack)
         {
             isDragable = true;
         }
