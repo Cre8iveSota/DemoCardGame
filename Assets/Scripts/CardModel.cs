@@ -14,6 +14,7 @@ public class CardModel
     public bool isFieldCard;
     public bool isPlayerCard;
     public ABILITY ability;
+    public SPELL spell;
     public CardModel(int cardId, bool isPlayer)
     {
         CardEntity cardEntity = Resources.Load<CardEntity>("CardDataList/Card" + cardId);
@@ -25,6 +26,7 @@ public class CardModel
         ability = cardEntity.ability;
         isAlive = true;
         isPlayerCard = isPlayer;
+        spell = cardEntity.spell;
     }
     void Damage(int damage)
     {
@@ -34,6 +36,18 @@ public class CardModel
             hp = 0;
             isAlive = false;
         }
+    }
+
+    // Self heal
+    void RecoveryHp(int amount)
+    {
+        hp += amount;
+    }
+
+    // Card heal
+    public void Heal(CardController card)
+    {
+        card.model.RecoveryHp(at);
     }
 
     public void Attack(CardController cardController)

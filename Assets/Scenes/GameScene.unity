@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 46930610}
   - component: {fileID: 46930612}
   - component: {fileID: 46930613}
+  - component: {fileID: 46930614}
   m_Layer: 5
   m_Name: Player Feild
   m_TagString: Untagged
@@ -239,6 +240,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+--- !u!114 &46930614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46930608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0106c81278284af4ab3eaa0fa616d2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &58162039
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,6 +491,7 @@ GameObject:
   - component: {fileID: 272686626}
   - component: {fileID: 272686628}
   - component: {fileID: 272686629}
+  - component: {fileID: 272686630}
   m_Layer: 5
   m_Name: Enemy Hero
   m_TagString: Untagged
@@ -568,6 +582,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6ea69b2a5ad4164946d4070b2a814a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &272686630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272686624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fd6ef092ec4c4bae8bf8f6a552aa1fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deck: 
+  heroHp: 0
+  manaCost: 0
+  defaultManaCost: 0
 --- !u!1 &310957638
 GameObject:
   m_ObjectHideFlags: 0
@@ -866,6 +896,7 @@ GameObject:
   - component: {fileID: 655249204}
   - component: {fileID: 655249203}
   - component: {fileID: 655249202}
+  - component: {fileID: 655249206}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -966,6 +997,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &655249206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655249201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e337c5fcad41743f3bc06cf740637015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resultPanel: {fileID: 405776442}
+  resultText: {fileID: 81489743}
+  playerHeroHpText: {fileID: 802704290}
+  enemyHeroHpText: {fileID: 310957640}
+  playerManaCostText: {fileID: 1877552556}
+  enemyManaCostText: {fileID: 1135865956}
+  timeCountText: {fileID: 1951646101}
 --- !u!1 &742534825
 GameObject:
   m_ObjectHideFlags: 0
@@ -995,22 +1045,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fba0437442d4649f8bad004162dff614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 826159323}
+  enemy: {fileID: 272686630}
   enemyAI: {fileID: 272686629}
   playerHandTransform: {fileID: 1961464011}
   enemyHandTransform: {fileID: 1459876113}
   playerFieldTransform: {fileID: 46930609}
   enemyFieldTransform: {fileID: 1911573298}
   CardPrefab: {fileID: 4146231070195731503, guid: 2457c9c09aea643e39a7e5ee8c883f02, type: 3}
-  playerHeroHpText: {fileID: 802704290}
-  enemyHeroHpText: {fileID: 310957640}
-  playerManaCostText: {fileID: 1877552556}
-  enemyManaCostText: {fileID: 1135865956}
-  resultPanel: {fileID: 405776442}
-  resultText: {fileID: 1148752361}
-  timeCountText: {fileID: 1951646101}
   playerHero: {fileID: 826159319}
-  playerManaCost: 0
-  enemyManaCost: 0
+  enemyHero: {fileID: 272686625}
+  uiManager: {fileID: 655249206}
   isPlayerTurn: 0
 --- !u!4 &742534827
 Transform:
@@ -1306,6 +1351,7 @@ GameObject:
   - component: {fileID: 826159321}
   - component: {fileID: 826159320}
   - component: {fileID: 826159322}
+  - component: {fileID: 826159323}
   m_Layer: 5
   m_Name: Player Hero
   m_TagString: Untagged
@@ -1384,6 +1430,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 331ec71fbc872419f8f7f99c86f9b44b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &826159323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 826159318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fd6ef092ec4c4bae8bf8f6a552aa1fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deck: 
+  heroHp: 0
+  manaCost: 0
+  defaultManaCost: 0
 --- !u!1 &1013071762
 GameObject:
   m_ObjectHideFlags: 0
@@ -2312,6 +2374,7 @@ GameObject:
   - component: {fileID: 1911573301}
   - component: {fileID: 1911573300}
   - component: {fileID: 1911573299}
+  - component: {fileID: 1911573302}
   m_Layer: 5
   m_Name: Enemy Feild
   m_TagString: Untagged
@@ -2402,6 +2465,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1911573297}
   m_CullTransparentMesh: 1
+--- !u!114 &1911573302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911573297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0106c81278284af4ab3eaa0fa616d2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1951646099
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     {
         CardController cardController = GetComponent<CardController>();
         Debug.Log("cardController.model.isPlayerCard " + cardController.model.isPlayerCard);
-        if (cardController.model.isPlayerCard && GameManager.instance.isPlayerTurn && !cardController.model.isFieldCard && cardController.model.cost <= GameManager.instance.playerManaCost)
+        if (cardController.model.isPlayerCard && GameManager.instance.isPlayerTurn && !cardController.model.isFieldCard && cardController.model.cost <= GameManager.instance.player.manaCost)
         {
             isDragable = true;
         }
@@ -68,8 +68,11 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         yield return new WaitForSeconds(0.25f);
         transform.DOMove(currentPosition, 0.25f);
         yield return new WaitForSeconds(0.25f);
-        transform.SetParent(defaultParent);
-        transform.SetSiblingIndex(siblingIndex);
+        if (this != null)
+        {
+            transform.SetParent(defaultParent);
+            transform.SetSiblingIndex(siblingIndex);
+        }
     }
 
     void Start()

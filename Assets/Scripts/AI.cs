@@ -20,18 +20,38 @@ public class AI : MonoBehaviour
         CardController[] cardList = gameManager.enemyHandTransform.GetComponentsInChildren<CardController>();
 
         // if enemy has under cost card, they keep to play card until it goes to be nothing hand
-        while (Array.Exists(cardList, card => card.model.cost < gameManager.enemyManaCost))
+        while (Array.Exists(cardList, card =>
+                (card.model.cost < gameManager.enemy.manaCost)
+            && (!card.IsSpell
+            || (card.IsSpell && card.CanUseSpell()))
+        ))
         {
             // Get under cost card
-            CardController[] selectableHandCardList = Array.FindAll(cardList, card => card.model.cost < gameManager.enemyManaCost);
+            CardController[] selectableHandCardList = Array.FindAll(cardList, card =>
+            (card.model.cost < gameManager.enemy.manaCost)
+            && (!card.IsSpell
+            || (card.IsSpell && card.CanUseSpell())
+            ));
 
             // choose the card to play
             CardController enemyCard = selectableHandCardList[0];
-            // To move card
-            enemyCard.OnField(false);
-            StartCoroutine(enemyCard.cardMovement.MoveToFeild(gameManager.enemyFieldTransform));
-            cardList = gameManager.enemyHandTransform.GetComponentsInChildren<CardController>();
+
+            // Turn the card over to the surface
+            enemyCard.Show();
+
+            // If the card type is a spell card, use it
+            if (enemyCard.IsSpell)
+            {
+                StartCoroutine(CastSpellOf(enemyCard));
+            }
+            else
+            {
+                // To move card
+                enemyCard.OnField();
+                StartCoroutine(enemyCard.cardMovement.MoveToFeild(gameManager.enemyFieldTransform));
+            }
             yield return new WaitForSeconds(1);
+            cardList = gameManager.enemyHandTransform.GetComponentsInChildren<CardController>();
         }
 
 
@@ -68,7 +88,7 @@ public class AI : MonoBehaviour
             {
                 StartCoroutine(attacker.cardMovement.MoveToTarget(gameManager.playerHero));
                 yield return new WaitForSeconds(0.25f);
-                gameManager.AttackToHero(attacker, false);
+                gameManager.AttackToHero(attacker);
                 yield return new WaitForSeconds(0.25f);
                 gameManager.CheckHeroHP();
             }
@@ -78,6 +98,38 @@ public class AI : MonoBehaviour
         yield return new WaitForSeconds(1);
         gameManager.ChangeTurn();
         Debug.Log("Start Enemy");
+    }
+
+    IEnumerator CastSpellOf(CardController card)
+    {
+        CardController target = null;
+        Transform movePosition = null;
+        switch (card.model.spell)
+        {
+            case SPELL.DAMAGE_ENEMY_CARD:
+                target = gameManager.GetEnemyFieldCards(card.model.isPlayerCard)[0];
+                movePosition = target.transform;
+                break;
+            case SPELL.HEAL_FRIEND_CARD:
+                target = gameManager.GetFriendFieldCards(card.model.isPlayerCard)[0];
+                movePosition = target.transform;
+                break;
+            case SPELL.DAMAGE_ENEMY_CARDS:
+                movePosition = gameManager.playerFieldTransform;
+                break;
+            case SPELL.HEAL_FRIEND_CARDS:
+                movePosition = gameManager.enemyFieldTransform;
+                break;
+            case SPELL.DAMAGE_ENEMY_HERO:
+                movePosition = gameManager.playerHero;
+                break;
+            case SPELL.HEAL_FRIEND_HERO:
+                movePosition = gameManager.enemyHero;
+                break;
+        }
+        StartCoroutine(card.cardMovement.MoveToFeild(movePosition));
+        yield return new WaitForSeconds(0.5f);
+        card.UseSpellTo(target);
     }
 
 }

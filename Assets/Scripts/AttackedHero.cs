@@ -16,7 +16,7 @@ public class AttackedHero : MonoBehaviour, IDropHandler
         }
 
         // If there is a shield card on the opponent's field, it cannot attack the opponent's hero directly.
-        CardController[] enemyFieldCards = GameManager.instance.GetEnemyFieldCards();
+        CardController[] enemyFieldCards = GameManager.instance.GetEnemyFieldCards(attacker.model.isPlayerCard);
         if (Array.Exists(enemyFieldCards, card => card.model.ability == ABILITY.SHEILD))
         {
             return;
@@ -25,7 +25,7 @@ public class AttackedHero : MonoBehaviour, IDropHandler
         if (attacker.model.canAttack)
         {
             // Make attacker attack to Hero
-            GameManager.instance.AttackToHero(attacker, true);
+            GameManager.instance.AttackToHero(attacker);
             GameManager.instance.CheckHeroHP();
         }
     }

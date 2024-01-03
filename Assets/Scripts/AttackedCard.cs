@@ -22,7 +22,7 @@ public class AttackedCard : MonoBehaviour, IDropHandler
         }
 
         // If there is a shield card on the opponent's field, it cannot attack apart from sheild card.
-        CardController[] enemyFieldCards = GameManager.instance.GetEnemyFieldCards();
+        CardController[] enemyFieldCards = GameManager.instance.GetEnemyFieldCards(attacker.model.isPlayerCard);
         if (Array.Exists(enemyFieldCards, card => card.model.ability == ABILITY.SHEILD) && defender.model.ability != ABILITY.SHEILD)
         {
             return;

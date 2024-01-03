@@ -19,13 +19,18 @@ public class DropPlace : MonoBehaviour, IDropHandler
         if (card != null)
         {
             if (!card.cardMovement.isDragable) return;
+            if (card.IsSpell)
+            {
+                return;
+            }
+
             // this.transformでこのコンポーネントを持つ場所に設定してあげることで、ドラッグ中のカードの親を指定する
             card.cardMovement.defaultParent = this.transform;
             if (card.model.isFieldCard)
             {
                 return;
             }
-            card.OnField(true);
+            card.OnField();
         }
     }
 }
