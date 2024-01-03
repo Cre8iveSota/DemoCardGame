@@ -25,8 +25,7 @@ public class DropPlace : MonoBehaviour, IDropHandler
             {
                 return;
             }
-            GameManager.instance.ReduceManaCost(card.model.cost, true);
-            card.model.isFieldCard = true;
+            card.OnField(true);
         }
     }
 }
