@@ -11,7 +11,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public void OnBeginDrag(PointerEventData eventData)
     {
         CardController cardController = GetComponent<CardController>();
-        Debug.Log("cardController.model.isPlayerCard " + cardController.model.isPlayerCard);
         if (cardController.model.isPlayerCard && GameManager.instance.isPlayerTurn && !cardController.model.isFieldCard && cardController.model.cost <= GameManager.instance.player.manaCost)
         {
             isDragable = true;

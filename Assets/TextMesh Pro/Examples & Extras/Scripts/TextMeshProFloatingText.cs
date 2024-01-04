@@ -63,8 +63,6 @@ namespace TMPro.Examples
                 m_textMeshPro.alignment = TextAlignmentOptions.Center;
                 m_textMeshPro.color = new Color32((byte)Random.Range(0, 255), (byte)Random.Range(0, 255), (byte)Random.Range(0, 255), 255);
                 m_textMeshPro.fontSize = 24;
-                //m_textMeshPro.enableExtraPadding = true;
-                //m_textMeshPro.enableShadows = false;
                 m_textMeshPro.enableKerning = false;
                 m_textMeshPro.text = string.Empty;
                 m_textMeshPro.isTextObjectScaleStatic = IsTextObjectScaleStatic;
@@ -73,8 +71,6 @@ namespace TMPro.Examples
             }
             else if (SpawnType == 1)
             {
-                //Debug.Log("Spawning TextMesh Objects.");
-
                 m_floatingText_Transform = m_floatingText.transform;
                 m_floatingText_Transform.position = m_transform.position + new Vector3(0, 15f, 0);
 

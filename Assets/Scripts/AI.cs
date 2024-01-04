@@ -97,7 +97,6 @@ public class AI : MonoBehaviour
         }
         yield return new WaitForSeconds(1);
         gameManager.ChangeTurn();
-        Debug.Log("Start Enemy");
     }
 
     IEnumerator CastSpellOf(CardController card)
